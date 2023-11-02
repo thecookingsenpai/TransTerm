@@ -1,0 +1,39 @@
+Button {
+    margin: 1 2;
+}
+
+
+
+.header {
+    margin: 1 0 0 2;
+    text-style: bold;
+}
+
+Sparkline {
+    width: 100%;
+    margin: 2;
+    color: red;
+}
+
+#divisor > .sparkline--max-color {
+    color: orange;
+}
+#divisor > .sparkline--min-color {
+    color: red;
+}
+
+.title {
+    color: red;
+}
+
+.status_yellow {
+    color: yellow
+}
+
+.status_red {
+    color: red
+}
+
+.status_green {
+    color: green
+}
