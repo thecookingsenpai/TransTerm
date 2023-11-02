@@ -20,13 +20,11 @@ Being text based, this program runs even in the terminal.
 
 ## Installation
 
-  git clone https://github.com/thecookingsenpai/transterm
-  cd transterm
-  pip3 install -r requirements.txt
+      git clone https://github.com/thecookingsenpai/transterm && cd transterm && pip3 install -r requirements.txt
 
 ## Usage
 
-  python3 gui.py
+      python3 gui.py
 
 
 ## License
