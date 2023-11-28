@@ -4,5 +4,4 @@ pydub
 pyaudio
 pocketsphinx
 SpeechRecognition
-portaudio
 textual
