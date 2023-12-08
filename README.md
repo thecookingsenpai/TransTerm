@@ -18,7 +18,15 @@ Being text based, this program runs even in the terminal.
     • Google Audio to Text + Silence detection
     • Sphynx CMU (processed offline locally)
 
-## Installation
+## Installation for Mac & Linux
+
+      git clone https://github.com/thecookingsenpai/transterm && cd transterm 
+
+      sudo chmod +x install.sh
+
+      ./install.sh
+
+## Installation for Window
 
       git clone https://github.com/thecookingsenpai/transterm && cd transterm && pip3 install -r requirements.txt
 
