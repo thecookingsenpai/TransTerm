@@ -52,7 +52,7 @@ class TransTerm(App):
         # Configuration
         yield Horizontal(
             Checkbox(
-                'Download a playlist',
+                "Download a playlist",
                 id="downloadPlaylist",
             ),
             Checkbox(
@@ -131,7 +131,7 @@ class TransTerm(App):
         isPlaylist = self.query_one("#downloadPlaylist")
         isPlaylist = isPlaylist.value
 
-         # Branching: in playlist mode we download (and if needed convert) all the videos of the playlist
+        # Branching: in playlist mode we download (and if needed convert) all the videos of the playlist
         # TODO NOTE: Transcribing is intentionally disabled on playlists. Feel free to tinker but it's a risk.
 
         # TODO: Avoid redundancy with the below branch
@@ -143,10 +143,14 @@ class TransTerm(App):
                 )
             playlist = term.printPlaylist(link)
             print(playlist)
-            self.query_one("#main_log").write("Please note that the TUI might seems frozen while downloading the playlist. Check the downloads folder for the progress.")
+            self.query_one("#main_log").write(
+                "Please note that the TUI might seems frozen while downloading the playlist. Check the downloads folder for the progress."
+            )
             self.query_one("#main_log").write("...Yes, we are working on it.")
             # TODO More verbosity!
-            d_path = term.managePlaylist(playlist, to_download=True, to_convert=toMp3 or toWav)
+            d_path = term.managePlaylist(
+                playlist, to_download=True, to_convert=toMp3 or toWav
+            )
             status = self.query_one("#status")
             status.classes = "status_green"
             self.query_one("#main_log").write("Done!")
@@ -170,7 +174,6 @@ class TransTerm(App):
         self.query_one("#configuration").value = (
             "\n" + f"MP3: {toMp3}, WAV: {toWav}, TEXT: {toText}"
         )
-
 
         # First we download the video
         folder = term.download(link)

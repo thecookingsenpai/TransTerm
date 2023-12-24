@@ -1,18 +1,18 @@
 # sourcery skip: use-fstring-for-concatenation
 import contextlib
 import os
-import shutil
-
-import unicodedata
 import re
+import shutil
+import unicodedata
 
-from pytube import Playlist, YouTube
 import speech_recognition as sr
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
+from pytube import Playlist, YouTube
 
 forceQuit = False
 r = sr.Recognizer()
+
 
 # NOTE: Taken from https://stackoverflow.com/questions/295135/turn-a-string-into-a-valid-filename
 def slugify(value, allow_unicode=False):
@@ -25,11 +25,15 @@ def slugify(value, allow_unicode=False):
     """
     value = str(value)
     if allow_unicode:
-        value = unicodedata.normalize('NFKC', value)
+        value = unicodedata.normalize("NFKC", value)
     else:
-        value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore').decode('ascii')
-    value = re.sub(r'[^\w\s-]', '', value.lower())
-    return re.sub(r'[-\s]+', '-', value).strip('-_')
+        value = (
+            unicodedata.normalize("NFKD", value)
+            .encode("ascii", "ignore")
+            .decode("ascii")
+        )
+    value = re.sub(r"[^\w\s-]", "", value.lower())
+    return re.sub(r"[-\s]+", "-", value).strip("-_")
 
 
 def local_audio_transcribe(path):
@@ -118,15 +122,19 @@ def download(link, target_filename="video"):
     print("downloading....")
     video = url.streams.get_highest_resolution()
     print(video.title)
-    path_to_download_folder = str(os.path.dirname(os.path.realpath(__file__)))  + "/downloads"
+    path_to_download_folder = (
+        str(os.path.dirname(os.path.realpath(__file__))) + "/downloads"
+    )
     video.download(path_to_download_folder, filename=target_filename + ".mp4")
     print("Downloaded! :)")
     return path_to_download_folder
+
 
 # INFO Print a playlist info
 def printPlaylist(playlist_link):
     playlist = Playlist(playlist_link)
     return playlist
+
 
 # INFO Download a playlist
 def managePlaylist(playlist, to_download=False, to_convert=False, named=True):
@@ -134,7 +142,9 @@ def managePlaylist(playlist, to_download=False, to_convert=False, named=True):
     if not to_download:
         return playlist
     counter = 0
-    path_to_download_folder = str(os.path.dirname(os.path.realpath(__file__))) + "/downloads"
+    path_to_download_folder = (
+        str(os.path.dirname(os.path.realpath(__file__))) + "/downloads"
+    )
     for url in playlist:
         counter += 1
         print("Downloading video", counter, "of", len(playlist))
@@ -147,9 +157,15 @@ def managePlaylist(playlist, to_download=False, to_convert=False, named=True):
         print("Downloading : ", filename)
         video.download(path_to_download_folder, filename=filename + ".mp4")
         if to_convert:
-            convert(path_to_download_folder, format="mp3", source_filename=filename, target_filename=filename)
+            convert(
+                path_to_download_folder,
+                format="mp3",
+                source_filename=filename,
+                target_filename=filename,
+            )
     print("Downloaded all videos! :)")
     return path_to_download_folder
+
 
 # INFO Get info about the video
 def getInfo(link):
@@ -158,11 +174,21 @@ def getInfo(link):
     # Trying to sanitize the title
     title = url.title + "_" + url.author
     title = slugify(title)
-    return {"title": url.title, "author": url.author, "length": str(url.length), "filename": title}
+    return {
+        "title": url.title,
+        "author": url.author,
+        "length": str(url.length),
+        "filename": title,
+    }
 
 
 # INFO Convert the video to audio
-def convert(path_to_download_folder, format="wav", source_filename="video", target_filename="audio"):
+def convert(
+    path_to_download_folder,
+    format="wav",
+    source_filename="video",
+    target_filename="audio",
+):
     src = f"{path_to_download_folder}/{source_filename}.mp4"
     dst = f"{path_to_download_folder}/{target_filename}.{format}"
     print("Converting to audio....")
