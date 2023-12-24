@@ -2,7 +2,6 @@
 
 A terminal based YouTube video and playlist downloader (mp4, mp3, wav) and transcriber with a nice TUI interface.
 
-
 ![transterm](https://i.imgur.com/woRKbiK.png)
 
 PS. The transparency and retro term is proper of my KDE Plasma configuration
@@ -12,24 +11,24 @@ PS. The transparency and retro term is proper of my KDE Plasma configuration
 **By utilizing TransTerm, you acknowledge that you have read, comprehended, and agreed to the terms set forth in the disclaimer at the bottom of this file.**
 
 # Table of Contents
+
 1. [What is TransTerm?](#what-is-this)
 2. [Features](#features)
 3. [Installation](#installation)
-    - [For Mac & Linux](#installation-for-mac--linux)
-    - [Troubleshooting](#troubleshooting)
-    - [For Windows](#installation-for-windows)
+   - [For Mac & Linux](#installation-for-mac--linux)
+   - [Troubleshooting](#troubleshooting)
+   - [For Windows](#installation-for-windows)
 4. [Usage](#usage)
 5. [Manual Mode (Debug)](#manual-mode-aka-debug)
 6. [Contributing](#contributing)
 7. [License](#license)
 8. [Disclaimer](#disclaimer)
-    - [Terms and Conditions](#terms-and-conditions)
-        - [Appropriate Use](#appropriate-use)
-            - [Copyright Adherence](#copyright-adherence)
-            - [Personal Usage](#personal-usage)
-            - [Third-Party Content](#third-party-content)
-        - [Limitation of Responsibility](#limitation-of-responsibility)
-
+   - [Terms and Conditions](#terms-and-conditions)
+     - [Appropriate Use](#appropriate-use)
+       - [Copyright Adherence](#copyright-adherence)
+       - [Personal Usage](#personal-usage)
+       - [Third-Party Content](#third-party-content)
+     - [Limitation of Responsibility](#limitation-of-responsibility)
 
 ## What is this
 
@@ -119,6 +118,6 @@ Users are responsible for confirming that they possess the legal rights to downl
 
 The developers of TransTerm are not accountable for any misuse or illegal use of the tool. Users accept all associated risks with their use of the application and agree to comply with applicable laws and YouTube's terms of service.
 
-***Please Note: This disclaimer does not serve as legal advice. Users are encouraged to seek legal counsel if they have queries regarding the legality of their use of TransTerm in their specific jurisdiction.***
+**_Please Note: This disclaimer does not serve as legal advice. Users are encouraged to seek legal counsel if they have queries regarding the legality of their use of TransTerm in their specific jurisdiction._**
 
 **By utilizing TransTerm, you acknowledge that you have read, comprehended, and agreed to the terms set forth in this disclaimer.**
