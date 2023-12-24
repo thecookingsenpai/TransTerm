@@ -1,19 +1,23 @@
-import json
-import os
-import time
-
-from textual.app import App, ComposeResult
-from textual.widgets import Header, Footer
-from textual.widgets import Input, Label, Pretty
-from textual.widgets import Button, RichLog, Sparkline, Checkbox, Select
-from textual.containers import Horizontal, VerticalScroll
-from textual.validation import Function, Number, ValidationResult, Validator
-from textual import events, on
-import term
-from dotenv import load_dotenv
+import random
 import threading
 from statistics import mean
-import random
+
+from textual import events
+from textual.app import App, ComposeResult
+from textual.containers import Horizontal
+from textual.widgets import (
+    Button,
+    Checkbox,
+    Footer,
+    Header,
+    Input,
+    Label,
+    RichLog,
+    Select,
+    Sparkline,
+)
+
+import term
 
 
 class TransTerm(App):
@@ -29,8 +33,15 @@ class TransTerm(App):
         """Create child widgets for the app."""
         yield Header()
         yield Footer()
-        yield Label("TransTerm - A simple terminal-based YouTube downloader and transcriber by TheCookingSenpai\n", classes="title")
-        yield Label("Yellow -> idle • Red -> busy • Green -> success\n\n", classes="status_yellow", id="status")
+        yield Label(
+            "TransTerm - A simple terminal-based YouTube downloader and transcriber by TheCookingSenpai\n",
+            classes="title",
+        )
+        yield Label(
+            "Yellow -> idle • Red -> busy • Green -> success\n\n",
+            classes="status_yellow",
+            id="status",
+        )
         # Inputs
 
         yield Label("Enter a YouTube link to work with:")
@@ -40,6 +51,10 @@ class TransTerm(App):
         )
         # Configuration
         yield Horizontal(
+            Checkbox(
+                'Download a playlist',
+                id="downloadPlaylist",
+            ),
             Checkbox(
                 "Convert to mp3",
                 id="toMp3",
@@ -51,9 +66,13 @@ class TransTerm(App):
             Checkbox(
                 "Transcript to text",
                 id="toText",
-            )
+            ),
         )
-        options = [("Google Simple", "google"), ("Google with silence detection", "google_silence"), ("Local (using Sphynx)", "local")]
+        options = [
+            ("Google Simple", "google"),
+            ("Google with silence detection", "google_silence"),
+            ("Local (using Sphynx)", "local"),
+        ]
         yield Select(options, id="engine")
         # Buttons
         yield Button("Go", id="go")
@@ -65,9 +84,8 @@ class TransTerm(App):
         yield Label("Configuration: ", id="configuration")
         random.seed(73)
         data = [random.expovariate(1 / 3) for _ in range(1000)]
-        yield Sparkline(data, summary_function=mean, id="divisor")        
+        yield Sparkline(data, summary_function=mean, id="divisor")
         yield RichLog(id="main_log")
-
 
     # SECTION Actions
     def on_key(self, event: events.Key) -> None:
@@ -97,11 +115,11 @@ class TransTerm(App):
             self.process = threading.Thread(name="act", target=self.act)
             self.query_one("#main_log").write("Started!")
             self.process.start()
-                
+
     def act(self):
         link = self.query_one("#link")
         link = link.value
-        if link  == "":
+        if link == "":
             link = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
         self.query_one("#main_log").write(f"Link: {link}")
         toMp3 = self.query_one("#toMp3")
@@ -110,31 +128,69 @@ class TransTerm(App):
         toWav = toWav.value
         toText = self.query_one("#toText")
         toText = toText.value
+        isPlaylist = self.query_one("#downloadPlaylist")
+        isPlaylist = isPlaylist.value
+
+         # Branching: in playlist mode we download (and if needed convert) all the videos of the playlist
+        # TODO NOTE: Transcribing is intentionally disabled on playlists. Feel free to tinker but it's a risk.
+
+        # TODO: Avoid redundancy with the below branch
+        if isPlaylist:
+            self.query_one("#main_log").write("Downloading playlist...")
+            if toMp3 or toWav:
+                self.query_one("#main_log").write(
+                    "Converting to mp3 only too (wav is not supported on playlists)...this may take a while"
+                )
+            playlist = term.printPlaylist(link)
+            print(playlist)
+            self.query_one("#main_log").write("Please note that the TUI might seems frozen while downloading the playlist. Check the downloads folder for the progress.")
+            self.query_one("#main_log").write("...Yes, we are working on it.")
+            # TODO More verbosity!
+            d_path = term.managePlaylist(playlist, to_download=True, to_convert=toMp3 or toWav)
+            status = self.query_one("#status")
+            status.classes = "status_green"
+            self.query_one("#main_log").write("Done!")
+            self.query_one("#main_log").write(str(d_path))
+            self.lock = False
+            return
+
+        # Branching: in single video mode we download (and if needed convert) the video
         self.query_one("#main_log").write(f"MP3: {toMp3}, WAV: {toWav}, TEXT: {toText}")
         try:
             infos = term.getInfo(link)
         except Exception as e:
-            self.query_one("#main_log").write("ERROR: Could not retrieve informations;")
+            self.query_one("#main_log").write(
+                "ERROR: Could not retrieve informations: " + str(e) + ";"
+            )
             return
-        
+
         self.query_one("#video_title").value = "Title: " + infos["title"]
         self.query_one("#video_author").value = "Author: " + infos["author"]
         self.query_one("#video_length").value = "Seconds: " + infos["length"]
-        self.query_one("#configuration").value = "\n" + f"MP3: {toMp3}, WAV: {toWav}, TEXT: {toText}"
+        self.query_one("#configuration").value = (
+            "\n" + f"MP3: {toMp3}, WAV: {toWav}, TEXT: {toText}"
+        )
+
 
         # First we download the video
         folder = term.download(link)
         # Now, if the user wants to convert to mp3, we do it
         if toMp3:
-            self.query_one("#main_log").write("Converting to mp3...this may take a while")
+            self.query_one("#main_log").write(
+                "Converting to mp3...this may take a while"
+            )
             term.convert(folder, format="mp3")
         # Now, if the user wants to convert to wav or text, we do it
         if toWav and not toText:
-            self.query_one("#main_log").write("Converting to wav...this may take a while")
+            self.query_one("#main_log").write(
+                "Converting to wav...this may take a while"
+            )
             file = term.convert(folder, format="wav")
         # Now, if the user wants to convert to text, we do it
         if toText:
-            self.query_one("#main_log").write("Converting to text...this may take a while")
+            self.query_one("#main_log").write(
+                "Converting to text...this may take a while"
+            )
             engine = self.query_one("#engine").value
             file = term.convert(folder, format="wav")
             if engine == "google_silence":
@@ -149,12 +205,12 @@ class TransTerm(App):
         status = self.query_one("#status")
         status.classes = "status_green"
         self.query_one("#main_log").write("Done!")
-        self.query_one("#main_log").write(str(file))            
+        self.query_one("#main_log").write(str(file))
         self.lock = False
         return True
 
     # !SECTION Actions
-    
+
     def loadEnv(self):
         self.env = {}
         with open(".env", "r") as f:
@@ -162,7 +218,7 @@ class TransTerm(App):
             for line in textenv:
                 key, value = line.split("=")
                 self.env[key.strip()] = value.strip()
-        
+
     def saveEnv(self):  # sourcery skip: use-join
         preparedEnv = ""
         for key, value in self.env.items():
@@ -171,7 +227,7 @@ class TransTerm(App):
             f.write(preparedEnv)
             f.flush()
         return self.env
-            
+
 
 if __name__ == "__main__":
     app = TransTerm()

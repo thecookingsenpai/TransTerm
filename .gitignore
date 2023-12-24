@@ -1,1 +1,7 @@
 __pycache__
+*.mp3
+*.mp4
+*.wav
+downloads/*.mp3
+downloads/*.mp4
+downloads/*.wav

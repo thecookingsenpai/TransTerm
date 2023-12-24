@@ -4,4 +4,5 @@ pydub
 pyaudio
 pocketsphinx
 SpeechRecognition
+dotenv
 textual

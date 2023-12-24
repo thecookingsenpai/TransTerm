@@ -34,6 +34,14 @@ Being text based, this program runs even in the terminal.
 
       python3 gui.py
 
+## Contributing
+
+You are welcome and free to contribute to the project. To do that, you have a few ways:
+
+- Add some kind of functionality and create a PR
+- Search the lines marked with TODO and FIXME in the code for the most urgent things
+- In any case, thank you!
+
 
 ## License
 
