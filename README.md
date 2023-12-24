@@ -92,7 +92,7 @@ You are welcome and free to contribute to the project. To do that, you have a fe
 
 ## License
 
-CreativeCommons BY-NC-SA 4.0
+MIT License
 
 ## Disclaimer
 
