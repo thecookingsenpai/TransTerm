@@ -4,6 +4,8 @@ A terminal based youtube to mp3, wav and transcriber with a nice TUI
 
 ![transterm](https://i.imgur.com/Ly6ZWa6.png)
 
+🌲🌲🌲🦌🌲🌲🌲🦌🌲🌲🌲
+
 ## What is this
 
 TransTerm is an highly experimental text based graphical user interface to act on YouTube videos.
